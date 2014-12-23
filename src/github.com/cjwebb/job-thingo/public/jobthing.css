@@ -1,0 +1,13 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+.job-rate,.job-contact {
+  font-weight: bold;
+}
+.job-spec {
+  padding-bottom: 50px;
+}
