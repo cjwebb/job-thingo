@@ -3,16 +3,23 @@ package main
 import (
 	"fmt"
 	"log"
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
 	"html"
 	"html/template"
+
+	"github.com/go-martini/martini"
+	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/binding"
+
+	"github.com/satori/go.uuid"
+
 	"github.com/cjwebb/job-thingo/db"
 )
 
-type JobLink struct {
-	id    string
-	email string
+type JobForm struct {
+	Title		string `form:"title"       binding:"required"`
+	Description	string `form:"description" binding:"required"`
+	Rate		string `form:"rate"        binding:"required"`
+	Email		string `form:"email"       binding:"required"`
 }
 
 func main() {
@@ -20,7 +27,7 @@ func main() {
 	startApp(database)
 }
 
-func startApp(db db.Database) {
+func startApp(database db.Database) {
 
 	helpers := template.FuncMap{
 		"unescape": func(s string) template.HTML {
@@ -39,27 +46,38 @@ func startApp(db db.Database) {
 		r.HTML(200, "home", nil)
 	})
 
-	// Display form to create new JobLink
-	m.Get("/gen", func(params martini.Params, r render.Render) {
-		r.HTML(200, "generate", nil)
+	// Generate new Job and redirect
+	m.Post("/gen-job", binding.Form(JobForm{}), func(form JobForm, r render.Render, errs binding.Errors) {
+		if errs != nil {
+			for _, e := range errs {
+				fmt.Print(e.FieldNames[0])
+				fmt.Println(e.Message)
+			}
+			// todo(cjwebb) - santize form data
+			r.HTML(400, "home", form)
+		} else {
+			u1 := uuid.NewV4().String()
+			// todo(cjwebb) - sanitize form data
+			// todo(cjwebb) - how should we handle errors here?
+			database.PutJob(db.Job{u1, form.Title, form.Description, form.Email, form.Rate})
+			r.Redirect("/a/"+u1)
+		}
 	})
 
-	// Generate new JobLink and redirect
-	m.Post("/gen", func(params martini.Params, r render.Render) {
-		fmt.Print(params)
-		// https://github.com/martini-contrib/binding
-		r.HTML(200, "job", nil)
-	})
-
-	// Show incoming JobLink
+	// Show incoming Job
 	m.Get("/a/:jobid", func(params martini.Params, r render.Render) {
-		response, err := db.GetJob(params["jobid"])
-
+		jobId, err := uuid.FromString(params["jobid"])
 		if err != nil {
-			log.Print(err.Error())
+			// input not a UUID, so don't try database lookup
 			r.Redirect("/")
 		} else {
-			r.HTML(200, "job", response)
+			job, err := database.GetJob(jobId.String())
+			if err != nil {
+				log.Print(err.Error())
+				r.Redirect("/")
+			} else {
+				r.HTML(200, "job", job)
+			}
 		}
 	})
 

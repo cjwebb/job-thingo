@@ -11,9 +11,8 @@ type Database struct {
 }
 
 type Job struct {
-	uuid          string
+	Id            string
 	Title         string
-	Link          string
 	Description   string
 	Contact_email string
 	Rate          string
@@ -31,9 +30,9 @@ func NewDatabase() Database {
 	return Database{ddbs}
 }
 
-func (s Database) GetJob(id string) (Job, error) {
+func (db Database) GetJob(id string) (Job, error) {
 	primaryKey := dynamodb.PrimaryKey{dynamodb.NewStringAttribute("uuid", ""), nil}
-	t := dynamodb.Table{s.server, "jt-jobs", primaryKey}
+	t := dynamodb.Table{db.server, "jt-jobs", primaryKey}
 	r, err := t.GetItem(&dynamodb.Key{id, ""})
 
 	if err != nil {
@@ -43,7 +42,6 @@ func (s Database) GetJob(id string) (Job, error) {
 	job := Job{
 		get("uuid", r),
 		get("title", r),
-		get("link", r),
 		get("description", r),
 		get("contact_email", r),
 		get("rate", r),
@@ -57,5 +55,17 @@ func get(name string, m map[string]*dynamodb.Attribute) string {
 	} else {
 		return ""
 	}
+}
+
+func (db Database) PutJob(job Job) error {
+	primaryKey := dynamodb.PrimaryKey{dynamodb.NewStringAttribute("uuid", ""), nil}
+	t := dynamodb.Table{db.server, "jt-jobs", primaryKey}
+	_, err := t.PutItem(job.Id, "", []dynamodb.Attribute{
+		*dynamodb.NewStringAttribute("title", job.Title),
+		*dynamodb.NewStringAttribute("description", job.Description),
+		*dynamodb.NewStringAttribute("contact_email", job.Contact_email),
+		*dynamodb.NewStringAttribute("rate", job.Rate),
+	})
+	return err
 }
 
