@@ -45,7 +45,7 @@ func (db Database) GetJob(id string) (Job, error) {
 	r, err := t.GetItem(&dynamodb.Key{id, ""})
 
 	if err != nil {
-		return Job{}, err // todo(cjwebb) - better error handling
+		return Job{}, err
 	}
 
 	job := Job{
