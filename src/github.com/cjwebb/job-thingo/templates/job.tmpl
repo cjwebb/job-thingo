@@ -2,7 +2,9 @@
   <h1>{{ .Title }}</h1>
   <p>{{ .Description | unescape }}</p>
   <p class="job-rate">Rate: {{ .Rate }}</p>
-  <p class="job-contact">Contact: <a href="mailto:{{ .ContactEmail }}">{{ .ContactEmail }}</a></p>
+  <hr/>
+  <p class="job-contact">Email to Apply for Job: <a href="mailto:apply@jobthing.org?subject=ref:{{.Id}}">apply@jobthing.org</a></p>
+  <p>Please reference id: {{.Id}} in your email if you apply</p>
 </div>
 
 <div class="panel panel-primary">
