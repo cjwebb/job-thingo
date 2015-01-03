@@ -1,31 +1,40 @@
 <h2>Welcome to JobThing</h2>
-<p>Yes, hello world! You must be looking for a software job if you've stumbled upon this site.</p>
+<p>You must be looking for a software job if you've stumbled upon this site. Or you know of one that is available...</p>
 
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Post New Job Description:</h3>
   </div>
   <div class="panel-body">
+
+    {{if .HasErrors}}
+    <div class="alert alert-danger" role="alert">
+      {{range .Errors}}
+      <p><strong>{{.FieldNames}}</strong> is {{.Message}}</p>
+      {{end}}
+    </div>
+    {{end}}
+
     <form role="form" method="POST" action="/gen-job">
       <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" name="title" placeholder="Job Title (e.g. Java Software Engineer)" value="{{.Title}}">
+        <input type="text" class="form-control" name="Title" placeholder="Job Title (e.g. Java Software Engineer)" value="{{.job.Title}}">
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea rows="8" class="form-control" name="description" placeholder="Enter a description here. Try to include as much detail as possible. Basic HTML is allowed." value="{{.Description}}"></textarea>
+        <textarea rows="8" class="form-control" name="Description" placeholder="Enter a description here. Try to include as much detail as possible. Basic HTML is allowed." value="{{.job.Description}}"></textarea>
 	<p class="help-block">Basic HTML is allowed</p>
       <div class="form-group">
         <label for="rate">Rate</label>
-        <input type="text" class="form-control" name="rate" placeholder="Rate (e.g. £50000/year or £500/day)" value="{{.Rate}}">
+        <input type="text" class="form-control" name="Rate" placeholder="Rate (e.g. £50000/year or £500/day)" value="{{.job.Rate}}">
       </div>
       <div class="form-group">
         <label for="contact_email">Contact Email</label>
-        <input type="email" class="form-control" name="contact_email" placeholder="Who should the applicant email to apply?" value="{{.ContactEmail}}">
+        <input type="email" class="form-control" name="ContactEmail" placeholder="Who is recruiting for this job? Enter recruiter's email address here." value="{{.job.ContactEmail}}">
       </div>
       <div class="form-group">
         <label for="email">Your Email address</label>
-        <input type="email" class="form-control" name="user_email" placeholder="Enter your email" value="{{.UserEmail}}">
+        <input type="email" class="form-control" name="UserEmail" placeholder="Enter your email" value="{{.job.UserEmail}}">
         <p class="help-block">We won't send you any emails unless your referral is successful. In that case, we will need to contact you to pay any referral fees due.</p>
       </div>
       <button type="submit" class="btn btn-default">Submit</button>

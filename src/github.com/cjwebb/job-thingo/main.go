@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html"
 	"html/template"
 	"log"
@@ -17,15 +16,15 @@ import (
 )
 
 type JobForm struct {
-	Title		string `form:"title"       	binding:"required"`
-	Description	string `form:"description"	binding:"required"`
-	Rate		string `form:"rate"        	binding:"required"`
-	ContactEmail	string `form:"contact_email"	binding:"required"`
-	UserEmail	string `form:"user_email"  	binding:"required"`
+	Title        string `form:"Title" binding:"required"`
+	Description  string `form:"Description" binding:"required"`
+	Rate         string `form:"Rate" binding:"required"`
+	ContactEmail string `form:"ContactEmail" binding:"required"`
+	UserEmail    string `form:"UserEmail" binding:"required"`
 }
 
 type EmailForm struct {
-	Email	string `form:"email"	binding:"required"`
+	Email string `form:"Email" binding:"required"`
 }
 
 func main() {
@@ -75,21 +74,24 @@ func startApp(database db.Database) {
 	m.Post("/gen-job", binding.Form(JobForm{}), func(form JobForm, r render.Render, errs binding.Errors) {
 		saneForm := sanitizeForm(form)
 		if errs != nil {
-			// todo(cjwebb) - display errors
-			r.HTML(400, "home", saneForm)
+			response := map[string]interface{}{"HasErrors": true, "Errors": errs, "job": saneForm}
+			r.HTML(400, "home", response)
 		} else {
 			id := newId()
 			genJob := db.Job{
-				id,
-				saneForm.Title,
-				saneForm.Description,
-				saneForm.ContactEmail,
-				saneForm.Rate,
-				[]db.JobRef{db.JobRef{id,saneForm.UserEmail}},
+				Id: id,
+				Title: saneForm.Title,
+				Description: saneForm.Description,
+				ContactEmail: saneForm.ContactEmail,
+				Rate: saneForm.Rate,
+				JobConsList: []db.JobRef{db.JobRef{Id: id, Email: saneForm.UserEmail}},
 			}
-			// todo(cjwebb) - how should we handle errors here?
-			database.PutJob(genJob)
-			r.Redirect("/a/" + id)
+			err := database.PutJob(genJob)
+			if err != nil {
+				r.HTML(503, "error", map[string]interface{}{"code": 503})
+			} else {
+				r.Redirect("/a/" + id)
+			}
 		}
 	})
 
@@ -105,13 +107,15 @@ func startApp(database db.Database) {
 				log.Print(err.Error())
 				r.Redirect("/")
 			} else {
-				r.HTML(200, "job", job)
+				response := map[string]interface{}{"job":job}
+				r.HTML(200, "job", response)
 			}
 		}
 	})
 
 	// Generate new link to Job
 	m.Post("/a/:jobid/gen-link", binding.Form(EmailForm{}), func(form EmailForm, params martini.Params, r render.Render, errs binding.Errors) {
+		// todo(cjwebb) refactor all the error handling. is duplicated in other handlers too.
 		jobId, err := uuid.FromString(params["jobid"])
 		if err != nil {
 			// input not a UUID, so don't try database lookup
@@ -123,25 +127,27 @@ func startApp(database db.Database) {
 				r.Redirect("/")
 			} else {
 				saneForm := sanitizeEmailForm(form)
-				fmt.Println(saneForm.Email)
 				if errs != nil {
-					// todo(cjwebb) - show errors
-					r.HTML(400, "job", job)
+					response := map[string]interface{}{"HasErrors": true, "Errors": errs, "link": saneForm, "job": job}
+					r.HTML(400, "job", response)
 				} else {
 					// job exists, form is valid... so gen new link
 					id := newId()
-					newRef := db.JobRef{id, saneForm.Email}
-					// todo(cjwebb) - how should we handle errors here?
+					newRef := db.JobRef{Id: id, Email: saneForm.Email}
 					genJob := db.Job{
-						id,
-						job.Title,
-						job.Description,
-						job.ContactEmail,
-						job.Rate,
-						append([]db.JobRef{newRef}, job.JobConsList...),
+						Id: id,
+						Title: job.Title,
+						Description: job.Description,
+						ContactEmail: job.ContactEmail,
+						Rate: job.Rate,
+						JobConsList: append([]db.JobRef{newRef}, job.JobConsList...),
 					}
-					database.PutJob(genJob)
-					r.Redirect("/a/" + id)
+					err := database.PutJob(genJob)
+					if err != nil {
+						r.HTML(503, "error", map[string]interface{}{"code": 503})
+					} else {
+						r.Redirect("/a/" + id)
+					}
 				}
 			}
 		}

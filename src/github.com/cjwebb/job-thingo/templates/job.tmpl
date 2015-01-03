@@ -1,10 +1,10 @@
 <div class="job-spec">
-  <h1>{{ .Title }}</h1>
-  <p>{{ .Description | unescape }}</p>
-  <p class="job-rate">Rate: {{ .Rate }}</p>
+  <h1>{{ .job.Title }}</h1>
+  <p>{{ .job.Description | unescape }}</p>
+  <p class="job-rate">Rate: {{ .job.Rate }}</p>
   <hr/>
-  <p class="job-contact">Email to Apply for Job: <a href="mailto:jobthing.apply@gmail.com?subject=ref:{{.Id}}">jobthing.apply@gmail.com</a></p>
-  <p>Please reference id: {{.Id}} in your email if you apply</p>
+  <p class="job-contact">Email to Apply for Job: <a href="mailto:jobthing.apply@gmail.com?subject=ref:{{.job.Id}}">jobthing.apply@gmail.com</a></p>
+  <p>Please reference id: {{.job.Id}} in your email if you apply</p>
 </div>
 
 <div class="panel panel-primary">
@@ -12,10 +12,19 @@
         <h3 class="panel-title">Generate Referral Link</h3>
   </div>
   <div class="panel-body">
-    <form role="form" method="POST" action="/a/{{.Id}}/gen-link">
+
+    {{if .HasErrors}}
+      <div class="alert alert-danger" role="alert">
+        {{range .Errors}}
+        <p><strong>{{.FieldNames}}</strong> is {{.Message}}</p>
+        {{end}}
+      </div>
+    {{end}}
+
+    <form role="form" method="POST" action="/a/{{.job.Id}}/gen-link">
       <div class="form-group">
         <label for="email">Your Email address</label>
-        <input type="email" class="form-control" name="email" placeholder="Enter email">
+        <input type="email" class="form-control" name="Email" placeholder="Enter your email address">
         <p class="help-block">We won't send you any emails unless your referral is successful.</p>
       </div>
       <button type="submit" class="btn btn-default">Submit</button>
