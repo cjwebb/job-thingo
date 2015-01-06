@@ -1,5 +1,7 @@
-<h2>Welcome to JobThing</h2>
-<p>You must be looking for a software job if you've stumbled upon this site. Or you know of one that is available...</p>
+<div class="page-header">
+  <h1>Welcome to JobThing</h1>
+  <p>You must be looking for a software job if you've stumbled upon this site. Or you know of one that is available...</p>
+</div>
 
 <div class="panel panel-primary">
   <div class="panel-heading">
@@ -24,6 +26,15 @@
         <label for="description">Description</label>
         <textarea rows="8" class="form-control" name="Description" placeholder="Enter a description here. Try to include as much detail as possible. Basic HTML is allowed." value="{{.job.Description}}"></textarea>
 	<p class="help-block">Basic HTML is allowed</p>
+      </div>
+      <div class="form-group">
+        <label for="job-type">Job Type</label>
+        <select name="JobType">
+          <option value="Permanent" {{if eq .job.JobType "Permanent"}}selected="selected"{{end}}>Permanent</option>
+          <option value="Contract" {{if eq .job.JobType "Contract"}}selected="selected"{{end}}>Contract</option>
+          <option value="Permanent or Contract" {{if eq .job.JobType "Permanent or Contract"}}selected="selected"{{end}}>Permanent or Contract</option>
+        </select>
+      </div>
       <div class="form-group">
         <label for="rate">Rate</label>
         <input type="text" class="form-control" name="Rate" placeholder="Rate (e.g. £50000/year or £500/day)" value="{{.job.Rate}}">

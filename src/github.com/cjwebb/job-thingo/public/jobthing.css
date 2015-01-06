@@ -5,7 +5,7 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
-.job-rate,.job-contact {
+.job-rate,.job-contact,.job-type {
   font-weight: bold;
 }
 .job-spec {

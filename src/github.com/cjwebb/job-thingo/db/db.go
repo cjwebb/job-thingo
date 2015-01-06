@@ -19,6 +19,7 @@ type Job struct {
 	Description   string
 	ContactEmail  string
 	Rate          string
+	JobType       string
 	JobConsList   []JobRef // persisted as a json string 
 }
 
@@ -54,6 +55,7 @@ func (db Database) GetJob(id string) (Job, error) {
 		get("description", r),
 		get("contact_email", r),
 		get("rate", r),
+		get("job_type", r),
 		stringToSlice(get("job_cons_list", r)),
 	}
 	return job, nil
@@ -84,6 +86,7 @@ func (db Database) PutJob(job Job) error {
 		*dynamodb.NewStringAttribute("description", job.Description),
 		*dynamodb.NewStringAttribute("contact_email", job.ContactEmail),
 		*dynamodb.NewStringAttribute("rate", job.Rate),
+		*dynamodb.NewStringAttribute("job_type", job.JobType),
 		*dynamodb.NewStringAttribute("job_cons_list", sliceToString(job.JobConsList)),
 		*dynamodb.NewStringAttribute("date_created", time.Now().Format(time.RFC3339)),
 	})

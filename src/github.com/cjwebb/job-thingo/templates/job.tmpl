@@ -1,6 +1,10 @@
 <div class="job-spec">
-  <h1>{{ .job.Title }}</h1>
+  <div class="page-header">
+    <h1>{{ .job.Title }}</h1>
+  </div>
   <p>{{ .job.Description | unescape }}</p>
+  <br/>
+  <p class="job-type">Job Type: {{ .job.JobType }}</p>
   <p class="job-rate">Rate: {{ .job.Rate }}</p>
   <hr/>
   <p class="job-contact">Email to Apply for Job: <a href="mailto:jobthing.apply@gmail.com?subject=ref:{{.job.Id}}">jobthing.apply@gmail.com</a></p>

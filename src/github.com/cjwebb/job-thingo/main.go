@@ -21,6 +21,7 @@ type JobForm struct {
 	Rate         string `form:"Rate" binding:"required"`
 	ContactEmail string `form:"ContactEmail" binding:"required"`
 	UserEmail    string `form:"UserEmail" binding:"required"`
+	JobType      string `form:"JobType" binding:"required"`
 }
 
 type EmailForm struct {
@@ -54,6 +55,7 @@ func startApp(database db.Database) {
 			sanitizer.Sanitize(form.Rate),
 			sanitizer.Sanitize(form.ContactEmail),
 			sanitizer.Sanitize(form.UserEmail),
+			sanitizer.Sanitize(form.JobType),
 		}
 	}
 	sanitizeEmailForm := func(form EmailForm) EmailForm {
@@ -67,7 +69,8 @@ func startApp(database db.Database) {
 
 	// Home page
 	m.Get("/", func(r render.Render) {
-		r.HTML(200, "home", nil)
+		data := map[string]interface{}{"job": JobForm{}}
+		r.HTML(200, "home", data)
 	})
 
 	// Generate new Job and redirect
@@ -84,6 +87,7 @@ func startApp(database db.Database) {
 				Description: saneForm.Description,
 				ContactEmail: saneForm.ContactEmail,
 				Rate: saneForm.Rate,
+				JobType: saneForm.JobType,
 				JobConsList: []db.JobRef{db.JobRef{Id: id, Email: saneForm.UserEmail}},
 			}
 			err := database.PutJob(genJob)
@@ -140,6 +144,7 @@ func startApp(database db.Database) {
 						Description: job.Description,
 						ContactEmail: job.ContactEmail,
 						Rate: job.Rate,
+						JobType: job.JobType,
 						JobConsList: append([]db.JobRef{newRef}, job.JobConsList...),
 					}
 					err := database.PutJob(genJob)
