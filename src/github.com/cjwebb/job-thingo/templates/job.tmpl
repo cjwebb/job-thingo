@@ -1,3 +1,10 @@
+{{if .displayLink}}
+<div class="alert alert-success new-link-alert" role="alert">
+  <p><strong>Your Referral Link:</strong> <a href="{{.displayLink}}" class="alert-link">{{.displayLink}}</a></p>
+  <p>Save this link, and send it on. This link is how JobThing tracks your referrals.</p>
+</div>
+{{end}}
+
 <div class="job-spec">
   <div class="page-header">
     <h1>{{ .job.Title }}</h1>
@@ -11,9 +18,19 @@
   <p>Please reference id: {{.job.Id}} in your email if you apply</p>
 </div>
 
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Not Interested? Your friends might know someone that is!</h2>
+    <p>Forward this job advert to your network by generating your referral link. This new link will stake your claim towards any referral fee. If your friend's friend gets the job by using your referral link, you will earn a split of any referral fee. Even if your friends aren't looking for a job, they may know someone who is!</p>
+    <p>The form below just generates a new link. You can choose yourself how you distribute it. Email, Twitter, Facebook - the choice is yours. We won't send emails on your behalf.</p>
+  </div>
+</div>
+
+<br/>
+
 <div class="panel panel-primary">
   <div class="panel-heading">
-        <h3 class="panel-title">Generate Referral Link</h3>
+        <h3 class="panel-title">Generate Your Referral Link</h3>
   </div>
   <div class="panel-body">
 
@@ -29,7 +46,7 @@
       <div class="form-group">
         <label for="email">Your Email address</label>
         <input type="email" class="form-control" name="Email" placeholder="Enter your email address">
-        <p class="help-block">We won't send you any emails unless your referral is successful.</p>
+        <p class="help-block">We won't send emails on your behalf, and we won't send you any emails unless your referral is successful.</p>
       </div>
       <button type="submit" class="btn btn-default">Submit</button>
     </form>

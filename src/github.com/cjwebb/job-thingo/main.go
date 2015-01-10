@@ -4,6 +4,8 @@ import (
 	"html"
 	"html/template"
 	"log"
+	"net/http"
+	"os"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
@@ -29,11 +31,12 @@ type EmailForm struct {
 }
 
 func main() {
+	baseUrl := os.Getenv("BASE_URL")
 	database := db.NewDatabase()
-	startApp(database)
+	startApp(database, baseUrl)
 }
 
-func startApp(database db.Database) {
+func startApp(database db.Database, baseUrl string) {
 
 	helpers := template.FuncMap{
 		"unescape": func(s string) template.HTML {
@@ -100,7 +103,7 @@ func startApp(database db.Database) {
 	})
 
 	// Show Job
-	m.Get("/a/:jobid", func(params martini.Params, r render.Render) {
+	m.Get("/a/:jobid", func(req *http.Request, params martini.Params, r render.Render) {
 		jobId, err := uuid.FromString(params["jobid"])
 		if err != nil {
 			// input not a UUID, so don't try database lookup
@@ -111,8 +114,14 @@ func startApp(database db.Database) {
 				log.Print(err.Error())
 				r.Redirect("/")
 			} else {
-				response := map[string]interface{}{"job":job}
-				r.HTML(200, "job", response)
+				// if this is a brand new link, then display a panel including the URL
+				if req.URL.Query().Get("display") == "newlink" {
+					response := map[string]interface{}{"job":job, "displayLink": baseUrl + req.URL.Path}
+					r.HTML(200, "job", response)
+				} else {
+					response := map[string]interface{}{"job":job}
+					r.HTML(200, "job", response)
+				}
 			}
 		}
 	})
@@ -151,7 +160,7 @@ func startApp(database db.Database) {
 					if err != nil {
 						r.HTML(503, "error", map[string]interface{}{"code": 503})
 					} else {
-						r.Redirect("/a/" + id)
+						r.Redirect("/a/" + id + "?display=newlink")
 					}
 				}
 			}
