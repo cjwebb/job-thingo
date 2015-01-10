@@ -1,7 +1,34 @@
 <div class="page-header">
-  <h1>Welcome to JobThing</h1>
-  <p>You must be looking for a software job if you've stumbled upon this site. Or you know of one that is available...</p>
+  <h1>JobThing <small>making you money by sharing referral fees</small></h1>
 </div>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-4">
+    <h2>Recruiters</h2>
+    <p>You have positions to fill, but no candidates. JobThing extends the reach of your referral fees to not only your contacts, but the contacts of your contact, and even onto their contacts too!</p>
+    <p>Imagine if you offer Alice a referral fee to recommend someone, but she doesn't know anyone suitable. Your search ends there! However, if she knows Bob, and Bob knows the ideal candidate, you were so close! By tracking and sharing referral fees, JobThing incentivises Alice to pass the job advert on to Bob as they can both benefit... and you get your ideal candidate!</p>
+  </div>
+  <div class="col-xs-12 col-sm-4">
+    <h2>Intermediaries</h2>
+    <p>Recruiters often resort to sending job spam, and hoping they make contact with the ideal candidate, or you know someone that is job hunting. Instead of ignoring these emails, you could get paid to forward them on. Referral fees are occasionally offered, but if someone doesn't come to mind, don't just delete the email.</p>
+    <p>If you know Bob, and he knows the ideal candidate, you can get paid for simply knowing Bob! If you forward the JobThing link onto Bob, and his friend gets employed, part of the referral fee goes to you. Essentially, your contact's contacts can become a source of income!</p>
+  </div>
+  <div class="col-xs-12 col-sm-4">
+    <h2>Candidates</h2>
+    <p>People often say you're more likely to get a job from a friend of a friend. By incentivising these people, JobThing makes it more likely for the perfect job description to be sent your way. If any friends are using JobThing, your referral network just expanded.</p>
+    <p>Finding the ideal job is hard. By working within a closed referral network, JobThing encourages recruiters to be more open about their job descriptions. It is easier to find that ideal job if all the adverts contain the company's name and the rate offered.</p>
+  </div>
+</div>
+
+<hr />
+
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Know of a job?</h2>
+  </div>
+</div>
+
+<br />
 
 <div class="panel panel-primary">
   <div class="panel-heading">
@@ -24,7 +51,7 @@
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea rows="8" class="form-control" name="Description" placeholder="Enter a description here. Try to include as much detail as possible. Basic HTML is allowed." value="{{.job.Description}}"></textarea>
+        <textarea rows="8" class="form-control" name="Description" placeholder="Enter a description here. Try to include as much detail as possible. Basic HTML is allowed.">{{.job.Description}}</textarea>
 	<p class="help-block">Basic HTML is allowed</p>
       </div>
       <div class="form-group">
@@ -52,4 +79,3 @@
     </form>
   </div>
 </div>
-
