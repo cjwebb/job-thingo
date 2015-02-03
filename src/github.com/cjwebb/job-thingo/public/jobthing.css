@@ -14,3 +14,11 @@ body {
 .new-link-alert {
   margin-top: 40px;
 }
+.progress-bar-titles {
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase; 
+}
+.progress-bar-selection {
+  padding-bottom: 40px;
+}

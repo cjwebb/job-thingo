@@ -18,11 +18,12 @@
   <p>Please reference id: {{.job.Id}} in your email if you apply</p>
 </div>
 
+{{if not .displayLink}}
 <div class="row">
   <div class="col-xs-12">
     <h2>Not Interested? Your friends might know someone that is!</h2>
-    <p>Forward this job advert to your network by generating your referral link. This new link will stake your claim towards any referral fee. If your friend's friend gets the job by using your referral link, you will earn a split of any referral fee. Even if your friends aren't looking for a job, they may know someone who is!</p>
-    <p>The form below just generates a new link. You can choose yourself how you distribute it. Email, Twitter, Facebook - the choice is yours. We won't send emails on your behalf.</p>
+    <p>Generate your unique referral link and then forward this job advert to your friends and contacts. Your referral link will stake your claim towards any referral fee. If your friend's friend gets the job by using your referral link, you will earn a split of any referral fee. Even if your friends aren't looking for a job, they may know someone who is!</p>
+    <p>The form below just generates a new link. We don't send emails on your behalf.</p>
   </div>
 </div>
 
@@ -52,4 +53,4 @@
     </form>
   </div>
 </div>
-
+{{end}}

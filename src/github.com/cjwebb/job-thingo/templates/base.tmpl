@@ -33,6 +33,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li><a href="/jobs/post">Post New Job</a></li>
             <li><a href="/about">About</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -45,6 +46,25 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+    <script>
+       tinymce.init({
+          selector:'.nicetextarea',
+          plugins: "link",
+          toolbar: "styleselect | removeformat | bold italic underline | bullist numlist | link image",
+	  menubar: false,
+          style_formats: [
+                {title: "Subheading", format: "h2"},
+                {title: "Bold", icon: "bold", format: "bold"},
+                {title: "Italic", icon: "italic", format: "italic"},
+                {title: "Underline", icon: "underline", format: "underline"},
+                {title: "Strikethrough", icon: "strikethrough", format: "strikethrough"},
+                {title: "Code", icon: "code", format: "code"},
+                {title: "Paragraph", format: "p"},
+                {title: "Blockquote", format: "blockquote"},
+          ]
+       });
+    </script>
   </body>
 </html>
 
